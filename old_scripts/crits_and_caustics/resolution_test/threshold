@@ -1,0 +1,39 @@
+from autofit import conf
+import autolens as al
+
+import os
+
+path = '{}/../../../'.format(os.path.dirname(os.path.realpath(__file__)))
+
+conf.instance = conf.Config(config_path=path+'config', output_path=path+'output')
+
+
+from autoastro.profiles import mass_profiles
+import autoarray.plot as aplt
+from autoarray.structures import grids
+from autoastro.plot import mass_profile_plots as mplt
+
+import numpy as np
+
+threshold = al.conf.instance.general.get("calculation_grid", "convergence_threshold", float)
+
+grid = grids.Grid.uniform(shape_2d=(200, 200), pixel_scales=0.05, sub_size=2)
+
+#power = np.arange(1.5, 2.6, 0.1)
+
+f = open('threshold_test_slope_2_5', 'a+')
+
+#for i in range(len(power)):
+pl_mass_profile = mass_profiles.EllipticalPowerLaw(
+centre=(0.0, 0.0), einstein_radius=1.8, axis_ratio=0.5, slope=2.5, phi=68,
+)
+
+radius = pl_mass_profile.einstein_radius_in_units(unit_length='arcsec')
+
+#mass = pl_mass_profile.einstein_mass_in_units(unit_mass='solMass')
+
+f.write(str(threshold) + ' ' + str(radius) + '\n')
+
+f.close()
+
+

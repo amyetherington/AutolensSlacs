@@ -1,0 +1,89 @@
+from autofit import conf
+import autolens as al
+
+import os
+
+path = '{}/../../'.format(os.path.dirname(os.path.realpath(__file__)))
+
+conf.instance = conf.Config(config_path=path+'config', output_path=path+'output')
+
+
+from autoastro.profiles import mass_profiles
+import autoarray.plot as aplt
+from autoarray.structures import grids
+from autoastro.plot import mass_profile_plots as mplt
+
+import numpy as np
+
+grid = grids.Grid.uniform(shape_2d=(200, 200), pixel_scales=0.05, sub_size=2)
+
+pl_mass_profile = mass_profiles.EllipticalPowerLaw(
+    centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.5, slope=1.6, phi=68,
+)
+pl_mass_profile_2 = mass_profiles.EllipticalPowerLaw(
+    centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.5, slope=2, phi=68,
+)
+
+pl_mass_profile_3 = mass_profiles.EllipticalPowerLaw(
+    centre=(0.0, 0.0), einstein_radius=2, axis_ratio=0.5, slope=2.4, phi=68,
+)
+pl_mass_profile_diff = mass_profiles.EllipticalPowerLaw(
+    centre=(0.0, 0.0), einstein_radius=1, axis_ratio=0.5, slope=1.6, phi=68,
+)
+pl_mass_profile_diff_2 = mass_profiles.EllipticalPowerLaw(
+    centre=(0.0, 0.0), einstein_radius=1, axis_ratio=0.5, slope=2, phi=68,
+)
+pl_mass_profile_diff_3 = mass_profiles.EllipticalPowerLaw(
+    centre=(0.0, 0.0), einstein_radius=1, axis_ratio=0.5, slope=2.4, phi=68,
+)
+
+
+radii = pl_mass_profile.einstein_radius_in_units(unit_length='arcsec')
+radii_2 = pl_mass_profile_2.einstein_radius_in_units(unit_length='arcsec')
+radii_3 = pl_mass_profile_3.einstein_radius_in_units(unit_length='arcsec')
+radii_diff = pl_mass_profile_diff.einstein_radius_in_units(unit_length='arcsec')
+radii_diff_2 = pl_mass_profile_diff_2.einstein_radius_in_units(unit_length='arcsec')
+radii_diff_3 = pl_mass_profile_diff_3.einstein_radius_in_units(unit_length='arcsec')
+
+print('radii 1.5', radii, radii_diff)
+print('radii 2', radii_2, radii_diff_2)
+print('radii 2.5', radii_3, radii_diff_3)
+
+print(len(pl_mass_profile.magnification_from_grid(grid=grid)))
+print(len(pl_mass_profile_2.magnification_from_grid(grid=grid)))
+print(len(pl_mass_profile_3.magnification_from_grid(grid=grid)))
+
+#print(1.5/2, radii/radii_2, radii_diff/radii_diff_2)
+#print(2/2.5, radii_2/radii_3, radii_diff_2/radii_diff_3)
+#print(1.5/2.5, radii/radii_3, radii_diff/radii_diff_3)
+
+mplt.convergence(pl_mass_profile, grid=grid)
+mplt.convergence(pl_mass_profile_2, grid=grid)
+mplt.convergence(pl_mass_profile_3, grid=grid)
+mplt.convergence(pl_mass_profile_diff, grid=grid)
+mplt.convergence(pl_mass_profile_diff_2, grid=grid)
+mplt.convergence(pl_mass_profile_diff_3, grid=grid)
+
+plotter = aplt.Plotter(
+    figure=aplt.Figure(figsize=(12, 12)),
+    labels=aplt.Labels(titlesize=24, ysize=24, xsize=24),
+    ticks=aplt.Ticks(ysize=24, xsize=24),
+    cmap=aplt.ColorMap(norm='log'),
+    cb=aplt.ColorBar(ticksize=20),
+)
+
+aplt.Array(array=np.abs(pl_mass_profile.magnification_from_grid(grid=grid)), plotter=plotter)
+aplt.Array(array=np.abs(pl_mass_profile_2.magnification_from_grid(grid=grid)), plotter=plotter)
+aplt.Array(array=np.abs(pl_mass_profile_3.magnification_from_grid(grid=grid)), plotter=plotter)
+
+
+#mplt.magnification(pl_mass_profile, grid=grid, plotter=plotter)
+#mplt.magnification(pl_mass_profile_2, grid=grid)
+#mplt.magnification(pl_mass_profile_3, grid=grid)
+#mplt.magnification(pl_mass_profile_diff, grid=grid)
+#mplt.magnification(pl_mass_profile_diff_2, grid=grid)
+#mplt.magnification(pl_mass_profile_diff_3, grid=grid)
+
+
+
+

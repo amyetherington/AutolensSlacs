@@ -1,0 +1,73 @@
+from autofit import conf
+import autolens as al
+
+import os
+
+path = '{}/../../../../autolens_workspace/'.format(os.path.dirname(os.path.realpath(__file__)))
+
+conf.instance = conf.Config(config_path=path+'config', output_path=path+'output')
+
+
+from autoastro.profiles import mass_profiles
+from autoastro import lensing
+from autoastro.plotters import profile_plotters
+from autoarray.structures import grids
+
+grid = al.Grid.uniform(shape_2d=(100, 100), pixel_scales=0.05, sub_size=2)
+
+pl_mass_profile = mass_profiles.EllipticalPowerLaw(
+    centre=(0.0, 0.0), einstein_radius=1.0, axis_ratio=0.5, slope=1.6
+)
+pl_mass_profile_2 = mass_profiles.EllipticalPowerLaw(
+    centre=(0.0, 0.0), einstein_radius=1.0, axis_ratio=0.5, slope=1.8
+)
+
+pl_mass_profile_3 = mass_profiles.EllipticalPowerLaw(
+    centre=(0.0, 0.0), einstein_radius=1.0, axis_ratio=0.5, slope=2.0
+)
+pl_mass_profile_4 = mass_profiles.EllipticalPowerLaw(
+    centre=(0.0, 0.0), einstein_radius=1.0, axis_ratio=0.5, slope=2.2
+)
+
+mass_profile_convergence = pl_mass_profile.convergence_from_grid(
+    grid=grid,
+)
+mass_profile_convergence_2 = pl_mass_profile_2.convergence_from_grid(
+    grid=grid,
+)
+mass_profile_convergence_3 = pl_mass_profile_3.convergence_from_grid(
+    grid=grid,
+)
+mass_profile_convergence_4 = pl_mass_profile_4.convergence_from_grid(
+    grid=grid,
+)
+
+
+profile_plotters.convergence(
+    mass_profile=pl_mass_profile, grid=grid, include_critical_curves=True
+)
+profile_plotters.convergence(
+    mass_profile=pl_mass_profile_2, grid=grid, include_critical_curves=True
+)
+profile_plotters.convergence(
+    mass_profile=pl_mass_profile_3, grid=grid, include_critical_curves=True
+)
+profile_plotters.convergence(
+    mass_profile=pl_mass_profile_4, grid=grid, include_critical_curves=True
+)
+
+radii = pl_mass_profile.einstein_radius_in_units(unit_length='arcsec')
+radii_2 = pl_mass_profile_2.einstein_radius_in_units(unit_length='arcsec')
+radii_3 = pl_mass_profile_3.einstein_radius_in_units(unit_length='arcsec')
+radii_4 = pl_mass_profile_4.einstein_radius_in_units(unit_length='arcsec')
+
+print('radii slope 1.6', radii)
+print('radii slope 1.8', radii_2)
+print('radii slope 2.0', radii_3)
+print('radii slope 2.2', radii_4)
+
+
+
+
+
+

@@ -1,0 +1,24 @@
+#!/bin/bash -l
+
+#SBATCH -N 2
+#SBATCH --ntasks=43
+#SBATCH --cpus-per-task=1
+#SBATCH -J slacs_bspline_without_shear_sie
+#SBATCH -o output/output.%A.out
+#SBATCH -e error/error.%A.err
+#SBATCH -p cosma7
+#SBATCH -A dp004
+#SBATCH -t 72:00:00   # longest job
+#SBATCH --mail-type=END                      # notifications for job done & fail
+#SBATCH --mail-user=amy.etherington@durham.ac.uk
+
+source /cosma/home/durham/dc-ethe1/autolens_slacs/activate.sh
+export CPUS_PER_TASK=1
+
+export OPENBLAS_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+export VECLIB_MAXIMUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+
+srun -n 43 --multi-prog conf/slacs_bspline_without_shear_sie.conf

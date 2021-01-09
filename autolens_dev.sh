@@ -1,0 +1,5 @@
+conda activate autolens_dev
+
+export WORKSPACE=/Users/dgmt59/PycharmProjects/autolens_slacs/
+export PYTHONPATH=/Users/dgmt59/PycharmProjects/PyAutoFit:/Users/dgmt59/PycharmProjects/PyAutoArray:/Users/dgmt59/PycharmProjects/PyAutoGalaxy:/Users/dgmt59/PycharmProjects/PyAutoLens:/Users/dgmt59/PycharmProjects/toy_model
+cd /Users/dgmt59/PycharmProjects/
